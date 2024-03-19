@@ -23,6 +23,9 @@ jobs:
           node-version: 20
           cache: "pnpm"
 
+      - name: install deps
+        run: pnpm install
+
       - name: Create Release Pull Request
         uses: changesets/action@v1
         env:
