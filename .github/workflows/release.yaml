@@ -54,6 +54,22 @@ jobs:
           diff-search: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Find Package.json Files
+        id: find-files
+        run: |
+          echo "::set-output name=files::$(find . -name 'package.json' -type f)"
+
+      - name: Check Version Numbers
+        id: check-versions
+        run: |
+          for file in ${{ steps.find-files.outputs.files }}; do
+            version=$(jq -r '.version' "$file")
+            if [[ $version =~ \.0\.0$ ]]; then
+              echo "Version number in $file matches the pattern '*.0.0'"
+              exit 1
+            fi
+          done
+
       - name: Log when changed
         if: steps.check.outputs.changed == 'true'
         run: 'echo "Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
