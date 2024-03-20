@@ -1,5 +1,11 @@
 # p1
 
+## 1.0.4
+
+### Patch Changes
+
+- b94f94f: test 4
+
 ## 1.0.3
 
 ### Patch Changes
