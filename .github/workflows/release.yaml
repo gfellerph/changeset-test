@@ -66,9 +66,14 @@ jobs:
             version=$(jq -r '.version' "$file")
             if [[ $version =~ \.0\.0$ ]]; then
               echo "Version number in $file matches the pattern '*.0.0'"
+              echo "::set-output name=version_match::true"
               exit 0
             fi
           done
+
+      - name: Set Output
+        if: steps.check-versions.outputs.version_match == 'true'
+        run: echo "Found a major change"
 
       - name: Log when changed
         if: steps.check.outputs.changed == 'true'
