@@ -1,5 +1,11 @@
 # p1
 
+## 3.0.0
+
+### Major Changes
+
+- 8905360: test 9
+
 ## 2.0.3
 
 ### Patch Changes
