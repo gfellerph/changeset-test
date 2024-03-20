@@ -57,7 +57,7 @@ jobs:
       - name: Find Package.json Files
         id: find-files
         run: |
-          echo "files = find ./packages -name 'package.json' -not -path '*/node_modules/*' -not -path '.' -type f" >> $GITHUB_OUTPUT
+          echo "files=$(find ./packages -name 'package.json' -not -path '*/node_modules/*' -not -path '.' -type f)" >> $GITHUB_OUTPUT
 
       - name: Check Version Numbers
         id: check-versions
