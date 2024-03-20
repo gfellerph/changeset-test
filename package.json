@@ -5,7 +5,7 @@
   "private": "true",
   "main": "index.js",
   "scripts": {
-    "fake-publish": "pnpm changeset publish --dry-run --no-git-checks"
+    "fake-publish": "pnpm publish --dry-run --no-git-checks"
   },
   "keywords": [],
   "author": "",

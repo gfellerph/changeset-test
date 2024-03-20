@@ -59,7 +59,7 @@ jobs:
         # Problem with this solution
         # - any push to main after a major release will return true, not just the first
       - name: Find package.json files and check version
-        if: steps.changesets.outputs.published == 'true'
+        # if : steps.changesets.outputs.published == 'true'
         id: check_version
         run: |
           result=false
