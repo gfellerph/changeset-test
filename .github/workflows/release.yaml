@@ -46,15 +46,20 @@ jobs:
       - name: status
         run: pnpm changeset status --verbose
 
-      - name: Check if version has changed
-        id: check # This will be the reference for getting the outputs.
-        uses: EndBug/version-check@v2 # You can choose the version/branch you prefer.
+      - name: Create Release Pull Request
+        id: changesets
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          file-name: ./packages/p1/package.json
-          diff-search: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          publish: pnpm fake-publish
 
+        # This action scans all package.json files and checks if any of them are on a clean major version
+        # This usually means, that they had a major release recently. It's the only way to detect if a major release really happened
+        # Problem with this solution
+        # - any push to main after a major release will return true, not just the first
       - name: Find package.json files and check version
+        if: steps.changesets.outputs.published == 'true'
         id: check_version
         run: |
           result=false
@@ -68,14 +73,6 @@ jobs:
           done
           echo "match=$result" >> $GITHUB_OUTPUT
 
-      - name: Output result
+      - name: Is there a major release?
+        if: steps.changesets.outputs.published == 'true'
         run: echo "Version pattern match ${{ steps.check_version.outputs.match }}"
-
-      - name: Log when changed
-        if: steps.check.outputs.changed == 'true'
-        run: 'echo "Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
-
-      - name: Create Release Pull Request
-        uses: changesets/action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
