@@ -54,26 +54,22 @@ jobs:
           diff-search: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Find Package.json Files
-        id: find-files
+      - name: Find package.json files and check version
+        id: check_version
         run: |
-          echo "files=$(find ./packages -name 'package.json' -not -path '*/node_modules/*' -not -path '.' -type f)" >> $GITHUB_OUTPUT
-
-      - name: Check Version Numbers
-        id: check-versions
-        run: |
-          for file in ${{ steps.find-files.outputs.files }}; do
-            version=$(jq -r '.version' "$file")
-            if [[ $version =~ \.0\.0$ ]]; then
-              echo "Version number in $file matches the pattern '*.0.0'"
-              echo "version_match = true" >> $GITHUB_OUTPUT
-              exit 0
+          result=false
+          files=$(find ./packages -name 'package.json' -not -path '*/node_modules/*')
+          for file in $files; do
+            version=$(jq -r '.version' $file)
+            if [[ $version == *".0.0" ]]; then
+              result=true
+              break
             fi
           done
+          echo "match=$result" >> $GITHUB_OUTPUT
 
-      - name: Set Output
-        if: steps.check-versions.outputs.version_match == 'true'
-        run: echo "Found a major change"
+      - name: Output result
+        run: echo "Version pattern match ${{ steps.check_version.outputs.match }}"
 
       - name: Log when changed
         if: steps.check.outputs.changed == 'true'
