@@ -74,5 +74,5 @@ jobs:
           echo "match=$result" >> $GITHUB_OUTPUT
 
       - name: Is there a major release?
-        if: steps.changesets.outputs.published == 'true'
+        #if : steps.changesets.outputs.published == 'true'
         run: echo "Version pattern match ${{ steps.check_version.outputs.match }}"
