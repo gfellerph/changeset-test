@@ -1,5 +1,11 @@
 # p1
 
+## 2.0.1
+
+### Patch Changes
+
+- 92594ee: test 6
+
 ## 2.0.0
 
 ### Major Changes
