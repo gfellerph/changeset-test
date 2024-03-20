@@ -18,7 +18,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
 
       - uses: pnpm/action-setup@v3
         name: Install pnpm
@@ -45,6 +45,18 @@ jobs:
 
       - name: status
         run: pnpm changeset status --verbose
+
+      - name: Check if version has changed
+        id: check # This will be the reference for getting the outputs.
+        uses: EndBug/version-check@v2 # You can choose the version/branch you prefer.
+        with:
+          file-name: ./packages/*
+          diff-search: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log when changed
+        if: steps.check.outputs.changed == 'true'
+        run: 'echo "Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
