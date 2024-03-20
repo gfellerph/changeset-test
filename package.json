@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "fake-publish": "pnpm publish --dry-run"
+    "fake-publish": "pnpm publish --dry-run --no-git-checks"
   },
   "keywords": [],
   "author": "",
